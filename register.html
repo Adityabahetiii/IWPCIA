@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Account</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .register-container {
+      background: #111;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,255,231,0.4);
+      width: 350px;
+      text-align: center;
+      position: relative;
+    }
+    .register-container h2 {
+      color: #00ffe7;
+      margin-bottom: 1rem;
+    }
+    .register-container input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: none;
+      border-radius: 5px;
+      background: #222;
+      color: #fff;
+    }
+    .register-container button {
+      background: #00ffe7;
+      color: #000;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .register-container button:hover {
+      background: #00cccc;
+    }
+    .extra-links {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    .extra-links a {
+      color: #00ffe7;
+      text-decoration: none;
+    }
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Popup style */
+    .popup {
+      display: none;
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #00ffe7;
+      color: #000;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 0 15px rgba(0,255,231,0.5);
+      animation: fadeInOut 3s forwards;
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, -20px); }
+      10% { opacity: 1; transform: translate(-50%, 0); }
+      90% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -20px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h2>Create Account</h2>
+    <form id="registerForm">
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Register</button>
+    </form>
+    <div class="extra-links">
+      <a href="login.html">Already have an account? Login</a>
+    </div>
+    <div id="popup" class="popup"></div>
+  </div>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password })
+      });
+
+      const data = await res.json();
+      const popup = document.getElementById("popup");
+
+      if (data.success) {
+        popup.innerText = "✅ Account created successfully!";
+        popup.style.display = "block";
+
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 3000);
+      } else {
+        popup.innerText = "❌ " + (data.error || "Registration failed");
+        popup.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
