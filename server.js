@@ -3,6 +3,7 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const path = require("path");
 
+// Create Express app
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -20,7 +21,7 @@ const db = mysql.createConnection({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-  ssl: { rejectUnauthorized: false } // Required for Railway
+  ssl: { rejectUnauthorized: false },
 });
 
 db.connect(err => {
@@ -34,11 +35,9 @@ db.connect(err => {
 // Login API
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
-
   const query = "SELECT * FROM user_form WHERE email = ? AND password = ?";
   db.query(query, [email, password], (err, results) => {
     if (err) return res.json({ success: false, error: "Database error" });
-
     if (results.length > 0) {
       res.json({ success: true, message: "Login successful!", user: results[0] });
     } else {
@@ -50,17 +49,15 @@ app.post("/login", (req, res) => {
 // Register API
 app.post("/register", (req, res) => {
   const { username, email, password } = req.body;
-
-  const query = "INSERT INTO user_form (username, email, password) VALUES (?, ?, ?)";
+  const query =
+    "INSERT INTO user_form (username, email, password) VALUES (?, ?, ?)";
   db.query(query, [username, email, password], (err, result) => {
-    if (err) return res.json({ success: false, error: "User may already exist" });
-
+    if (err)
+      return res.json({ success: false, error: "User may already exist" });
     res.json({ success: true, message: "User registered successfully!" });
   });
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+// ❌ REMOVE app.listen()
+// ✅ Instead, export the app as a function for Vercel
+module.exports = app;
