@@ -1,12 +1,10 @@
 {
   "version": 3,
   "builds": [
-    { "src": "api/server.js", "use": "@vercel/node" },
-    { "src": "public/**/*", "use": "@vercel/static" }
+    { "src": "api/server.js", "use": "@vercel/node" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/server.js" },
-    { "src": "/", "dest": "/public/login.html" },
     { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }
