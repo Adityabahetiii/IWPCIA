@@ -10,7 +10,7 @@ app.use(cors());
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "public", "login.html"));
 });
 
 // Connect to Railway MySQL using environment variables
